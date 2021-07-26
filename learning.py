@@ -65,24 +65,37 @@ def api_student():
 @app.route('/api/semester/<semester>', methods=['GET'])
 def api_each_semester(semester):
     if request.method == "GET":
-        result = Detail.objects(semester=semester)
+        result = Detail.objects(semester=semester).only('student_id', 'instructor')
         return result.to_json()
 
 
 @app.route('/api/program/<program>', methods=['GET'])
 def api_each_program(program):
     if request.method == "GET":
-        result1 = Detail.objects(program=program)
+        result1 = Detail.objects(program=program).only('student_id', 'instructor')
         return result1.to_json()
 
 
-@app.route('/api/course/<course>', methods=['GET'])
-def api_each_course(course):
+@app.route('/api/section/<section>', methods=['GET'])
+def api_each_section(section):
     if request.method == "GET":
-        result2 = Detail.objects(course=course)
+        result2 = Detail.objects(section=section).only('student_id', 'instructor')
         return result2.to_json()
 
-    
+
+@app.route('/api/semester/view/<semester>', methods=['GET'])
+def api_each_sem_view(semester):
+    if request.method == "GET":
+        result3 = Detail.objects(semester=semester).only('course', 'section', 'instructor')
+        return result3.to_json()
+
+
+@app.route('/api/course/<course>', methods=['GET'])
+def api_each_subject(course):
+    if request.method == "GET":
+        result4 = Detail.objects(course=course).only('instructor')
+        return result4.to_json()
+
 
 if __name__ == '__main__':
     app.run()
