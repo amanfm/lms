@@ -62,7 +62,27 @@ def api_student():
         return make_response("", 201)
 
 
+@app.route('/api/semester/<semester>', methods=['GET'])
+def api_each_semester(semester):
+    if request.method == "GET":
+        result = Detail.objects(semester=semester)
+        return result.to_json()
 
+
+@app.route('/api/program/<program>', methods=['GET'])
+def api_each_program(program):
+    if request.method == "GET":
+        result1 = Detail.objects(program=program)
+        return result1.to_json()
+
+
+@app.route('/api/course/<course>', methods=['GET'])
+def api_each_course(course):
+    if request.method == "GET":
+        result2 = Detail.objects(course=course)
+        return result2.to_json()
+
+    
 
 if __name__ == '__main__':
     app.run()
