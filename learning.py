@@ -91,7 +91,7 @@ def api_each_sem_view(semester_no):
         return result3.to_json()
 
 
-@app.route('/api/course/<course>', methods=['GET'])
+# @app.route('/api/course/<course>', methods=['GET'])
 def api_each_subject(course):
     if request.method == "GET":
         result4 = Detail.objects(course=course).only('instructor')
@@ -100,7 +100,7 @@ def api_each_subject(course):
 
 app.add_url_rule("/", "/", hello_world)
 app.add_url_rule("/populate", "populate", db_populate)
-app.add_url_rule("/api/student", "student", api_student)
+app.add_url_rule("/api/student", "student", api_student, methods=['GET', 'POST'])
 app.add_url_rule("/api/semester/<semester>", "<semester>", api_each_semester)
 app.add_url_rule("/api/program/<program>", "<program>", api_each_program)
 app.add_url_rule("/api/section/<section>", "<section>", api_each_section)
