@@ -1,1 +1,4 @@
-aman.txt.txt
+.idea
+__pycache__
+venv
+main.py
