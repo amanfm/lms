@@ -1,17 +1,18 @@
 from flask import Flask, make_response, request, jsonify
 from flask_mongoengine import MongoEngine
+from api_constants import mongodb_password, database_name
 
 app = Flask(__name__)
 
-database_name = "school"
-DB_URI = "mongodb+srv://m001-student:m001-mongodb-basics@sandbox.j0jwd.mongodb.net/school?retryWrites=true&w=majority"
+DB_URI = "mongodb+srv://m001-student:{}@sandbox.j0jwd.mongodb.net/{}?retryWrites=true&w=majority".format(
+    mongodb_password, database_name)
 app.config["MONGODB_HOST"] = DB_URI
 
 db = MongoEngine()
 db.init_app(app)
 
 
-@app.route('/')
+# @app.route('/')
 def hello_world():
     return 'Welcome to Learning Management System'
 
@@ -35,7 +36,7 @@ class Detail(db.Document):
         }
 
 
-@app.route('/populate', methods=['POST'])
+# @app.route('/populate', methods=['POST'])
 def db_populate():
     detail1 = Detail(student_id=1, program="BE", semester=1, course="Maths", section="A", instructor="Deepak")
     detail2 = Detail(student_id=2, program="BBA", semester=1, course="account", section="B", instructor="Gagan")
@@ -46,7 +47,7 @@ def db_populate():
     return make_response("", 201)
 
 
-@app.route('/api/student', methods=['GET', 'POST'])
+# @app.route('/api/student', methods=['GET', 'POST'])
 def api_student():
     if request.method == "GET":
         details = []
@@ -62,31 +63,31 @@ def api_student():
         return make_response("", 201)
 
 
-@app.route('/api/semester/<semester>', methods=['GET'])
+# @app.route('/api/semester/<semester>', methods=['GET'])
 def api_each_semester(semester):
     if request.method == "GET":
         result = Detail.objects(semester=semester).only('student_id', 'instructor')
         return result.to_json()
 
 
-@app.route('/api/program/<program>', methods=['GET'])
+# @app.route('/api/program/<program>', methods=['GET'])
 def api_each_program(program):
     if request.method == "GET":
         result1 = Detail.objects(program=program).only('student_id', 'instructor')
         return result1.to_json()
 
 
-@app.route('/api/section/<section>', methods=['GET'])
+# @app.route('/api/section/<section>', methods=['GET'])
 def api_each_section(section):
     if request.method == "GET":
         result2 = Detail.objects(section=section).only('student_id', 'instructor')
         return result2.to_json()
 
 
-@app.route('/api/semester/view/<semester>', methods=['GET'])
-def api_each_sem_view(semester):
+# @app.route('/api/semester/view/<semester>', methods=['GET'])
+def api_each_sem_view(semester_no):
     if request.method == "GET":
-        result3 = Detail.objects(semester=semester).only('course', 'section', 'instructor')
+        result3 = Detail.objects(semester=semester_no).only('course', 'section', 'instructor')
         return result3.to_json()
 
 
@@ -96,6 +97,15 @@ def api_each_subject(course):
         result4 = Detail.objects(course=course).only('instructor')
         return result4.to_json()
 
+
+app.add_url_rule("/", "/", hello_world)
+app.add_url_rule("/populate", "populate", db_populate)
+app.add_url_rule("/api/student", "student", api_student)
+app.add_url_rule("/api/semester/<semester>", "<semester>", api_each_semester)
+app.add_url_rule("/api/program/<program>", "<program>", api_each_program)
+app.add_url_rule("/api/section/<section>", "<section>", api_each_section)
+app.add_url_rule("/api/semester/view/<semester_no>", "<semester_no>", api_each_sem_view)
+app.add_url_rule("/api/course/<course>", "<course>", api_each_subject)
 
 if __name__ == '__main__':
     app.run()
