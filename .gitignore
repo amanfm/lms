@@ -1,4 +1,8 @@
 .idea
-__pycache__
+.mypy_cache/
+__pycache__/*
+*.py[cod]
 venv
 main.py
+api_constants.py
+*.pyc
